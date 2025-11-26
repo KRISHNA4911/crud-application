@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Users</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+          background: linear-gradient(to right, #f8f9fa, #e9ecef);
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 40px 20px;
+        }
+
+        .table-container {
+          background-color: rgba(255, 255, 255, 0.95);
+          border-radius: 16px;
+          padding: 30px;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+          width: 90%;
+          max-width: 900px;
+          overflow-x: auto;
+        }
+
+        h2 {
+          text-align: center;
+          color: #111;
+          margin-bottom: 25px;
+          font-size: 28px;
+          font-weight: 700;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        th, td {
+          padding: 16px 20px;
+          text-align: center;
+          border-bottom: 1px solid #dee2e6;
+          color: #111;
+          font-size: 18px;
+        }
+
+        th {
+          background-color: #f1f3f5;
+          font-weight: 700;
+          font-size: 19px;
+        }
+
+        tr:nth-child(even) {
+          background-color: #f8f9fa;
+        }
+
+        tr:hover {
+          background-color: #e9ecef;
+        }
+
+        .loader {
+          text-align: center;
+          font-weight: 600;
+          font-size: 18px;
+          color: #333;
+          padding: 20px;
+        }
+
+        .back-button {
+          display: flex;
+          justify-content: center;
+          margin-top: 25px;
+        }
+
+        .back-button a button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          padding: 10px 25px;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        .back-button a button:hover {
+          background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <h2>📋 All Users</h2>
+    <table id="userTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td colspan="3" class="loader">Loading users...</td></tr>
+        </tbody>
+    </table>
+
+    <!-- BACK BUTTON BELOW TABLE -->
+    <div class="back-button">
+        <a href="krishna-app.html">
+            <button>← BACK</button>
+        </a>
+    </div>
+</div>
+
+<script>
+    fetch("/users-data")
+      .then(res => res.json())
+      .then(users => {
+        const tbody = document.querySelector("#userTable tbody");
+        tbody.innerHTML = "";
+        if (users.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="3" class="loader">No users found.</td></tr>`;
+        } else {
+          users.forEach(user => {
+            const row = `
+              <tr>
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.age}</td>
+              </tr>
+            `;
+            tbody.innerHTML += row;
+          });
+        }
+      })
+      .catch(error => {
+        document.querySelector("#userTable tbody").innerHTML =
+          `<tr><td colspan="3" class="loader">Error loading data.</td></tr>`;
+        console.error("Fetch error:", error);
+      });
+</script>
+
+</body>
+</html>

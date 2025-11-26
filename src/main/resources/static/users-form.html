@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Save User</title>
+
+    <!-- Custom Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+          height: 100vh;
+          background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+          background-size: 400% 400%;
+          animation: gradientBG 15s ease infinite;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          padding: 20px;
+        }
+
+        @keyframes gradientBG {
+          0% {background-position: 0% 50%;}
+          50% {background-position: 100% 50%;}
+          100% {background-position: 0% 50%;}
+        }
+
+        .form-container {
+          background-color: white;
+          padding: 40px 30px;
+          border-radius: 20px;
+          box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+          width: 360px;
+          text-align: center;
+        }
+
+        h2 {
+          color: #333;
+          margin-bottom: 25px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+          width: 100%;
+          padding: 12px;
+          margin: 10px 0;
+          border: 2px solid #ccc;
+          border-radius: 10px;
+          font-size: 15px;
+          transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+          border-color: #23a6d5;
+          outline: none;
+        }
+
+        button {
+          width: 100%;
+          padding: 12px;
+          margin-top: 20px;
+          background-color: #23a6d5;
+          border: none;
+          border-radius: 10px;
+          color: white;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+          background-color: #1c8bbd;
+        }
+
+        #response {
+          margin-top: 20px;
+          font-weight: 600;
+          color: #333;
+        }
+
+        .back-button {
+          margin-top: 25px;
+        }
+
+        .back-button a button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          padding: 10px 25px;
+          border-radius: 10px;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        .back-button a button:hover {
+          background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Enter User Details</h2>
+    <form id="userForm">
+        <input type="text" id="name" placeholder="Enter Name" required>
+        <input type="number" id="age" placeholder="Enter Age" required>
+        <button type="submit">Submit</button>
+    </form>
+    <p id="response"></p>
+</div>
+
+<!-- BACK BUTTON -->
+<div class="back-button">
+    <a href="krishna-app.html">
+        <button>← BACK</button>
+    </a>
+</div>
+
+<script>
+    document.getElementById("userForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const age = parseInt(document.getElementById("age").value);
+
+        if (!name || !age) {
+            document.getElementById("response").innerText = "Please fill out all fields!";
+            return;
+        }
+
+        fetch("http://localhost:8080/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: name, age: age })
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Show backend message directly
+            document.getElementById("response").innerText = data;
+            // Reset form only if user saved successfully
+            if (data.includes("saved successfully")) {
+                document.getElementById("userForm").reset();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
